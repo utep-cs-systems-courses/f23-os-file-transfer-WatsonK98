@@ -50,7 +50,7 @@ if s is None:
     sys.exit(1)
 
 while 1:
-    userInput = input("Enter <cmd> <filename>, <send/receive> (stop to close): ")
+    userInput = input("Enter command (stop to close): ")
     userInput = userInput.split()
     if(userInput[0] == "send"):
         for entry in userInput:
