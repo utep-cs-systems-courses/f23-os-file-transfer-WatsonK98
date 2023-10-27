@@ -51,13 +51,10 @@ if s is None:
 
 while 1:
     userInput = input("Enter command (stop to close): ")
-    userInput = userInput.split()
-    if(userInput[0] == "send"):
-        for entry in userInput:
-            if(entry != "send"):
-                inputFile = os.open(entry, os.O_RDONLY)
-                #Do file descriptor stuff here
-    if(userInput[0] == "stop"):
+    if userInput.lower() == "stop":
         break
+    s.send(userInput.encode())
+    data = s.recv(1024)
+    print("Server response: ", data.decode())
 
 s.shutdown(socket.SHUT_WR)

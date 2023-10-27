@@ -2,7 +2,7 @@
 
 # Echo server program
 
-import socket, sys, re, os, time
+import socket, sys
 sys.path.append("../lib")       # for params
 import params
 
@@ -30,10 +30,11 @@ s.listen(1)              # allow only one outstanding request
 conn, addr = s.accept
 print('Connected by', addr) # wait until incoming connection request (and accept it)
 
-received = conn.recv(1).decode()
-while received != "":
-    #Do file descriptor stuff here
-    pass
+while True:
+    data = conn.recv(1024)
+    if not data:
+        break
+    conn.send(data)
     
 
 conn.send(b"world")
