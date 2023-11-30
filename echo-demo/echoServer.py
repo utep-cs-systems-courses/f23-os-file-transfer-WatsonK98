@@ -41,4 +41,3 @@ while 1:
         sendMsg = sendMsg[bytesSent:0]
 conn.shutdown(socket.SHUT_WR)
 conn.close()
-
