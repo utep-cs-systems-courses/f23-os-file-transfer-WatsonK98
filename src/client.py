@@ -5,6 +5,8 @@ import socket, sys, re, os
 sys.path.append("../lib")       # for params
 import params
 
+from mytar import createArchive, extractArchive
+
 switchesVarDefaults = (
     (('-s', '--server'), 'server', "127.0.0.1:50001"),
     (('-?', '--usage'), "usage", False), # boolean (set if present)
@@ -53,8 +55,40 @@ while 1:
     userInput = input("Enter command (stop to close): ")
     if userInput.lower() == "stop":
         break
-    s.send(userInput.encode())
-    data = s.recv(1024)
-    print("Server response: ", data.decode())
+
+    if userInput.startswith("send "):
+        _, *input_files = userInput.split()
+
+        createArchive("temp_archvive.dat", input_files)
+
+        with open("temp_archive.dat", "rb") as archive_file:
+            archive_data = archive_file.read()
+            s.send(archive_data)
+
+        data = s.recv(1024)
+        print("Server response: ", data.decode())
+
+        os.remove("temp_archive.dat")
+
+    elif userInput.startsWith("receive "):
+        _, archive_filename = userInput.split()
+
+        s.send(userInput.encode())
+
+        archive_data = s.recv(1024)
+
+        with open("received.dat", "wb") as received_file:
+            received_file.write(archive_data)
+
+        extractArchive("received.dat")
+
+        os.remove("received.dat")
+    
+    else:
+        s.send(userInput.encode())
+    
+    if not userInput.startswith("send ") and not userInput.startswith("receive "):
+        data = s.recv(1024)
+        print("Server response: ", data.decode())
 
 s.shutdown(socket.SHUT_WR)
