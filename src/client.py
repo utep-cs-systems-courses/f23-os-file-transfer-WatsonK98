@@ -59,7 +59,7 @@ while 1:
     if userInput.startswith("send "):
         _, *input_files = userInput.split()
 
-        createArchive("temp_archvive.dat", input_files)
+        createArchive("temp.dat", input_files)
 
         with open("temp_archive.dat", "rb") as archive_file:
             archive_data = archive_file.read()
@@ -68,9 +68,9 @@ while 1:
         data = s.recv(1024)
         print("Server response: ", data.decode())
 
-        os.remove("temp_archive.dat")
+        os.remove("temp.dat")
 
-    elif userInput.startsWith("receive "):
+    elif userInput.startswith("receive "):
         _, archive_filename = userInput.split()
 
         s.send(userInput.encode())
